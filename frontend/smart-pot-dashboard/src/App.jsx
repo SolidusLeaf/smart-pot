@@ -4,6 +4,7 @@ function App() {
   return (
     <div className="app">
       <h1>Smart Pot Dashboard</h1>
+      <p className="subtitle">Live monitoring panel for the autonomous plant pot</p>
 
       <div className="cards">
         <div className="card">

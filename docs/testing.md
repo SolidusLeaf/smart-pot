@@ -4,12 +4,16 @@
 
 | Test | Expected Result | Status |
 |---|---|---|
-| Backend starts with npm run dev | Server runs on port 3000 | Not tested |
-| GET / works | Returns backend running message | Not tested |
-| GET /api/health works | Returns backend status JSON | Not tested |
-| Dashboard starts with npm run dev | Vite opens dashboard | Not tested |
-| Dashboard cards visible | Four cards are shown | Not tested |
+| Backend starts with npm run dev | Server runs on port 3000 | Passed |
+| GET / works | Returns backend running message | Passed |
+| GET /api/health works | Returns backend status JSON | Passed |
+| GET /api/latest works | Returns placeholder latest telemetry | Passed |
+| GET /api/history works | Returns empty history array | Passed |
+| POST /api/command accepts WATER | Returns success true | Passed |
+| POST /api/command rejects empty command | Returns error message | Passed |
+| Dashboard starts with npm run dev | Vite opens dashboard | Passed |
+| Dashboard cards visible | Four cards are shown | Passed |
 
 ## Notes
 
-Write bugs, errors, and fixes here.
+Day 1 backend and dashboard skeleton tested successfully.

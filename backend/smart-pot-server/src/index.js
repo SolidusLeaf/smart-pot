@@ -2,10 +2,18 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+const latestRoute = require("./api/latest");
+const historyRoute = require("./api/history");
+const commandsRoute = require("./api/commands");
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use("/api", latestRoute);
+app.use("/api", historyRoute);
+app.use("/api", commandsRoute);
 
 const PORT = process.env.PORT || 3000;
 

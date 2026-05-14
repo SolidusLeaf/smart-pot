@@ -24,9 +24,14 @@ Day 1 backend and dashboard skeleton tested successfully.
 |---|---|---|
 | Mosquitto installed | Mosquitto command works from install folder | Passed |
 | Mosquitto broker running | Port 1883 is LISTENING | Passed |
-| MQTT subscriber connects | Subscriber waits on smartpot/plant1/telemetry | Passed |
+| MQTT subscriber connects | Subscriber waits on `smartpot/plant1/telemetry` | Passed |
 | MQTT publisher sends message | Test JSON message is published | Passed |
 | MQTT subscriber receives message | Telemetry JSON appears in subscriber terminal | Passed |
+| Backend connects to MQTT | Backend logs MQTT connection | Passed |
+| Backend subscribes to telemetry topic | Backend logs subscribed topic | Passed |
+| Backend receives telemetry | Backend logs parsed JSON | Passed |
+| Backend handles bad JSON | Backend logs error and does not crash | Passed |
+| Dashboard static layout opens | Dashboard loads in browser | Passed |
 
 ## Day 2 Notes
 

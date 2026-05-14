@@ -399,3 +399,19 @@ button,
     padding: 28px;
   }
 }
+
+.error-box {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 2px solid rgba(220, 38, 38, 0.2);
+  padding: 14px 18px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+  font-weight: 700;
+}
+
+.status-badge.checking {
+  color: #ca8a04;
+  border-color: rgba(202, 138, 4, 0.25);
+  box-shadow: 0 4px 16px rgba(202, 138, 4, 0.15);
+}

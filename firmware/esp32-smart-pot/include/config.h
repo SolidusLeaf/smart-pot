@@ -4,14 +4,13 @@
 // =============================
 // SENSOR SELECTION
 // =============================
-// Set to 1 for BME280, 0 for DHT22.
-#define USE_BME280 1
+#define DHTTYPE DHT22 
 
 // =============================
 // WI-FI CONFIG
 // =============================
-#define WIFI_SSID "YOUR_WIFI_NAME"
-#define WIFI_PASSWORD "YOUR_WIFI_PASSWORD"
+#define WIFI_SSID "Checking"
+#define WIFI_PASSWORD "ftqz3398"
 
 // =============================
 // MQTT CONFIG

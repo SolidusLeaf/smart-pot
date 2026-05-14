@@ -23,8 +23,6 @@
 // Pump control through MOSFET gate
 #define PIN_PUMP 26
 
-// Fan control through MOSFET gate / PWM
-#define PIN_FAN 27
 
 // Optional status LED
 #define PIN_STATUS_LED 2

@@ -3,7 +3,6 @@
 
 void actuatorsBegin();
 void setPump(bool enabled);
-void setFanSpeed(int speedPercent);
 bool getPumpState();
 int getFanSpeed();
 

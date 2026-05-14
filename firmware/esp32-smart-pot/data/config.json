@@ -1,0 +1,7 @@
+{
+  "soilTarget": 40,
+  "tempMax": 28,
+  "humidityMax": 70,
+  "waterMin": 20,
+  "pumpOverride": false
+}

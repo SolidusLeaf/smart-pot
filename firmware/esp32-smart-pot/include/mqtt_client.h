@@ -6,5 +6,5 @@
 void mqttBegin();
 void mqttLoop();
 void publishTelemetry(const SensorData &data);
-
+void publishAlert(const char* alertMessage);
 #endif

@@ -1,4 +1,5 @@
 const mqtt = require("mqtt");
+const { saveTelemetry } = require("../store/telemetryStore");
 
 const MQTT_URL = process.env.MQTT_URL || "mqtt://localhost:1883";
 const TELEMETRY_TOPIC =
@@ -32,7 +33,10 @@ function startMqttSubscriber() {
 
     try {
       const telemetry = JSON.parse(rawMessage);
+      const savedTelemetry = saveTelemetry(telemetry);
+
       console.log("Parsed telemetry:", telemetry);
+      console.log("Saved latest telemetry:", savedTelemetry);
     } catch (error) {
       console.error("Invalid JSON received:", error.message);
     }

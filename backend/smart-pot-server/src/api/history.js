@@ -1,12 +1,15 @@
 const express = require("express");
+const { getTelemetryHistory } = require("../store/telemetryStore");
 
 const router = express.Router();
 
 router.get("/history", (req, res) => {
+  const history = getTelemetryHistory();
+
   res.json({
-    deviceId: "plant1",
-    records: [],
-    message: "History database is not connected yet"
+    success: true,
+    count: history.length,
+    records: history
   });
 });
 

@@ -17,3 +17,37 @@
 ## Notes
 
 Day 1 backend and dashboard skeleton tested successfully.
+
+## Day 2 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Mosquitto installed | Mosquitto command works from install folder | Passed |
+| Mosquitto broker running | Port 1883 is LISTENING | Passed |
+| MQTT subscriber connects | Subscriber waits on smartpot/plant1/telemetry | Passed |
+| MQTT publisher sends message | Test JSON message is published | Passed |
+| MQTT subscriber receives message | Telemetry JSON appears in subscriber terminal | Passed |
+
+## Day 2 Notes
+
+Mosquitto was tested locally on Windows.
+
+Broker was already running as a Windows background service, so running `mosquitto -v` manually showed a port conflict on port 1883. This is expected because the service was already listening on port 1883.
+
+Verified with:
+
+```bash
+netstat -ano | findstr :1883
+```
+
+Test topic:
+
+```bash
+smartpot/plant1/telemetry
+```
+
+Test message:
+
+```bash
+{"deviceId":"plant1","soilMoisture":55,"temperature":24.5,"humidity":60}
+```

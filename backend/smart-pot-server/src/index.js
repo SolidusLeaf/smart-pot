@@ -5,6 +5,7 @@ require("dotenv").config();
 const latestRoute = require("./api/latest");
 const historyRoute = require("./api/history");
 const commandsRoute = require("./api/commands");
+const { startMqttSubscriber, getMqttStatus } = require("./mqtt/subscriber");
 
 const app = express();
 
@@ -27,10 +28,12 @@ app.get("/", (req, res) => {
 app.get("/api/health", (req, res) => {
   res.json({
     backend: "online",
-    mqtt: "not_connected_yet",
+    mqtt: getMqttStatus(),
     database: "not_connected_yet"
   });
 });
+
+startMqttSubscriber();
 
 app.listen(PORT, () => {
   console.log(`Smart Pot server running on port ${PORT}`);

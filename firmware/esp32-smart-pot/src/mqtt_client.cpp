@@ -10,7 +10,6 @@
 
 WiFiClient espClient;
 PubSubClient mqtt(espClient);
-AlertFlags alertFlags;
 static void connectWiFi() {
     Serial.print("Connecting to Wi-Fi: ");
     Serial.println(WIFI_SSID);
@@ -137,10 +136,4 @@ void checkAlerts(const SensorData &data) {
     } else {
         publishAlert("Environment conditions are good.");
     }
-}
-
-void initializeAlertFlags() {
-    alertFlags.soilAlert = false;
-    alertFlags.tempAlert = false;
-    alertFlags.humidityAlert = false;
 }

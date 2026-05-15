@@ -3,13 +3,14 @@
 #include <Arduino.h>
 #include <SPIFFS.h>
 ManualConfig manualConfig;
+static bool manualFlag = false;
 
 void setManualFlag(bool isInitialized) {
-    flag = isInitialized;
+    manualFlag = isInitialized;
 }
 
 bool getManualFlag() {
-    return flag;
+    return manualFlag;
 }
 // Default configuration values
 void manualInit() {

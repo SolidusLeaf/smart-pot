@@ -7,6 +7,7 @@
 
 #include <DHT.h>
 
+static bool sensorFlag = false;
 
 DHT dht(PIN_DHT22, DHTTYPE);
 
@@ -55,7 +56,6 @@ SensorData readSensors() {
     data.temperature = dht.readTemperature();
     data.humidity = dht.readHumidity();
     data.pressure = 0.0;
-    data.environmentOk = !isnan(data.temperature) && !isnan(data.humidity);
 
 
     return data;

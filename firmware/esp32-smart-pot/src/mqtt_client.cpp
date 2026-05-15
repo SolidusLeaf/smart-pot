@@ -10,7 +10,7 @@
 
 WiFiClient espClient;
 PubSubClient mqtt(espClient);
-
+AlertFlags alertFlags;
 static void connectWiFi() {
     Serial.print("Connecting to Wi-Fi: ");
     Serial.println(WIFI_SSID);
@@ -91,8 +91,7 @@ void publishTelemetry(const SensorData &data) {
         data.temperature,
         data.humidity,
         data.pressure,
-        getPumpState() ? "true" : "false",
-        getFanSpeed()
+        getPumpState() ? "true" : "false"
     );
 
     mqtt.publish(MQTT_TOPIC_TELEMETRY, payload);
@@ -138,4 +137,10 @@ void checkAlerts(const SensorData &data) {
     } else {
         publishAlert("Environment conditions are good.");
     }
+}
+
+void initializeAlertFlags() {
+    alertFlags.soilAlert = false;
+    alertFlags.tempAlert = false;
+    alertFlags.humidityAlert = false;
 }

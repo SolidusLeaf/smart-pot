@@ -4,9 +4,9 @@
 #include "sensors.h"
 
 struct AlertFlags {
-    bool soilAlert=false;
-    bool tempAlert=false;
-    bool humidityAlert=false;
+    bool soilAlert;
+    bool tempAlert;
+    bool humidityAlert;
 };
 
 void mqttBegin();
@@ -14,4 +14,5 @@ void mqttLoop();
 void publishTelemetry(const SensorData &data);
 void publishAlert(const char* alertMessage);
 void checkAlerts(const SensorData &data);
+void initializeAlertFlags();
 #endif

@@ -9,7 +9,6 @@ struct SensorData {
     float temperature;
     float humidity;
     float pressure;
-    bool environmentOk;
 };
 
 void sensorsBegin();

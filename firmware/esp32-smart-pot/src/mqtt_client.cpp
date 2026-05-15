@@ -1,6 +1,8 @@
 #include "mqtt_client.h"
 #include "config.h"
 #include "actuators.h"
+#include "manual.h"
+#include "sensors.h"
 
 #include <Arduino.h>
 #include <WiFi.h>
@@ -39,9 +41,9 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length) {
         setPump(true);
     } else if (message == "pump_off") {
         setPump(false);
-    } else if (message.startsWith("fan:")) {
-        int speed = message.substring(4).toInt();
-        setFanSpeed(speed);
+    }
+    if (getSensorFlag()) {
+        checkAlerts(readSensors());
     }
 }
 
@@ -95,4 +97,45 @@ void publishTelemetry(const SensorData &data) {
 
     mqtt.publish(MQTT_TOPIC_TELEMETRY, payload);
     Serial.println(payload);
+}
+void publishAlert(const char* alertMessage) {
+    mqtt.publish(MQTT_TOPIC_STATUS, alertMessage);
+    Serial.println(alertMessage);
+}
+
+void checkAlerts(const SensorData &data) {
+
+    AlertFlags alert;
+    if (data.soilPercent < manualConfig.soilTarget && data.waterPercent > manualConfig.waterMin) {
+        alert.soilAlert = true;
+    }
+    else {
+        alert.soilAlert = false;
+    }
+    if(data.temperature > manualConfig.tempMax) {
+        alert.tempAlert = true;
+    } else {
+        alert.tempAlert = false;
+    }
+    if (data.humidity > manualConfig.humidityMax) {
+        alert.humidityAlert = true;
+    }
+    else {
+        alert.humidityAlert = false;
+    }
+
+    if (alert.soilAlert) {
+        publishAlert("Soil moisture is below target!");
+    }else {
+        publishAlert("Soil moisture is comfortable.");
+    } if (alert.tempAlert) {
+        publishAlert("Temperature is too high!");
+    } else{
+        publishAlert("Temperature is comfortable.");
+    }if (alert.humidityAlert) {
+        publishAlert("Humidity is too high!");
+    
+    } else {
+        publishAlert("Environment conditions are good.");
+    }
 }

@@ -5,6 +5,8 @@ struct SensorData {
     int soilPercent;
     int waterRaw;
     int waterPercent;
+    int currentTankDistanceCm;
+    int tankPercent;
     float temperature;
     float humidity;
     float pressure;

@@ -112,7 +112,10 @@ void checkAlerts(const SensorData &data) {
     }
     if(data.temperature > manualConfig.tempMax) {
         alert.tempAlert = true;
-    } else {
+    } else if (data.temperature < manualConfig.tempMin) {
+        alert.tempAlert = true;
+    }
+    else {
         alert.tempAlert = false;
     }
     if (data.humidity > manualConfig.humidityMax) {
@@ -121,13 +124,20 @@ void checkAlerts(const SensorData &data) {
     else {
         alert.humidityAlert = false;
     }
-
+    if (data.tankPercent < manualConfig.tankDistancePercent) {
+        alert.tankAlert = true;
+    }
+    else {
+        alert.tankAlert = false;
+    }
+    
+    
     if (alert.soilAlert) {
         publishAlert("Soil moisture is below target!");
     }else {
         publishAlert("Soil moisture is comfortable.");
     } if (alert.tempAlert) {
-        publishAlert("Temperature is too high!");
+        publishAlert("Temperature is out of range!");
     } else{
         publishAlert("Temperature is comfortable.");
     }if (alert.humidityAlert) {
@@ -135,5 +145,16 @@ void checkAlerts(const SensorData &data) {
     
     } else {
         publishAlert("Environment conditions are good.");
+    }
+    if (alert.tankAlert) {
+        publishAlert("Tank level is low!");
+    } else {
+        publishAlert("Tank level is sufficient.");
+    }
+
+    {
+        String status = "Automatic watering is set to ";
+        status += manualConfig.pumpOverride ? "OFF (manual override)" : "ON (automatic control)";
+        publishAlert(status.c_str());
     }
 }

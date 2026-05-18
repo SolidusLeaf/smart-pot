@@ -5,8 +5,10 @@
 struct ManualConfig {
     int soilTarget;
     int tempMax;
+    int tempMin;
     int humidityMax;
     int waterMin;
+    int tankDistancePercent;
     bool pumpOverride;
 };
 

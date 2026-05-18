@@ -1,7 +1,9 @@
 {
   "soilTarget": 40,
   "tempMax": 28,
+  "tempMin": 15,
   "humidityMax": 70,
   "waterMin": 20,
+  "tankDistancePercent": 10,
   "pumpOverride": false
 }

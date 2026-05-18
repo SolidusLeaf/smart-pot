@@ -16,9 +16,11 @@ bool getManualFlag() {
 void manualInit() {
     manualConfig.soilTarget = 40;
     manualConfig.tempMax = 28;
+    manualConfig.tempMin = 15;
     manualConfig.humidityMax = 70;
     manualConfig.waterMin = 20;
-    manualConfig.pumpOverride = false;
+    manualConfig.tankDistancePercent = 10; // Set default tank distance threshold
+    manualConfig.pumpOverride = true; // Set to manual override by default instead of auto
 }
 
 void manualHandleMessage(const char* topic, const char* payload) {
@@ -42,7 +44,8 @@ void manualHandleMessage(const char* topic, const char* payload) {
 
     if (doc.containsKey("waterMin"))
         manualConfig.waterMin = doc["waterMin"];
-
+     if (doc.containsKey("tankDistancePercent"))
+        manualConfig.tankDistancePercent = doc["tankDistancePercent"];
     if (doc.containsKey("pump"))
         manualConfig.pumpOverride = doc["pump"];
 
@@ -66,12 +69,37 @@ bool loadConfig(const char* path) {
         return false;
     }
 
-    manualConfig.soilTarget = doc["soilTarget"] | 40;
-    manualConfig.tempMax = doc["tempMax"] | 28;
-    manualConfig.humidityMax = doc["humidityMax"] | 70;
-    manualConfig.waterMin = doc["waterMin"] | 20;
-    manualConfig.pumpOverride = doc["pumpOverride"] | false;
+    manualConfig.soilTarget = doc["soilTarget"];
+    manualConfig.tempMax = doc["tempMax"];
+    manualConfig.humidityMax = doc["humidityMax"];
+    manualConfig.waterMin = doc["waterMin"];
+    manualConfig.tankDistancePercent = doc["tankDistancePercent"];
+    manualConfig.pumpOverride = doc["pumpOverride"];
 
     file.close();
     return true;
 }
+void changeConfig(const ManualConfig& newConfig) {
+    manualConfig = newConfig;
+
+    StaticJsonDocument<256> doc;
+    doc["soilTarget"] = manualConfig.soilTarget;
+    doc["tempMax"] = manualConfig.tempMax;
+    doc["humidityMax"] = manualConfig.humidityMax;
+    doc["waterMin"] = manualConfig.waterMin;
+    doc["tankDistancePercent"] = manualConfig.tankDistancePercent;
+    doc["pumpOverride"] = manualConfig.pumpOverride;
+
+    File file = SPIFFS.open("/config.json", "w");
+    if (!file) {
+        Serial.println("Failed to open config file for writing");
+        return;
+    }
+
+    if (serializeJson(doc, file) == 0) {
+        Serial.println("Failed to write config to file");
+    } else {
+        Serial.println("Config saved to file");
+    }
+
+    file.close();

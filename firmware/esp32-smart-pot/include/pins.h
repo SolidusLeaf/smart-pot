@@ -23,6 +23,9 @@
 // Pump control through MOSFET gate
 #define PIN_PUMP 26
 
+// Ultrasonic sensor pins
+#define PIN_ULTRASONIC_TRIG 5
+#define PIN_ULTRASONIC_ECHO 18
 
 // Optional status LED
 #define PIN_STATUS_LED 2

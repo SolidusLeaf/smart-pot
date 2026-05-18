@@ -7,6 +7,7 @@ struct AlertFlags {
     bool soilAlert;
     bool tempAlert;
     bool humidityAlert;
+    bool tankAlert;
 };
 
 void mqttBegin();

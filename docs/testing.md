@@ -96,3 +96,15 @@ Week 1 backend, MQTT, database, alerts, API, and dashboard integration test comp
 | Dashboard fetches `/api/history` | Recent readings table is shown | Passed |
 | Data refresh works | Dashboard updates every 3 seconds | Passed |
 | Multiple MQTT messages appear | Recent readings list updates correctly | Passed |
+
+## Day 9 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Backend accepts power telemetry | Power fields are saved to SQLite | Passed |
+| GET /api/latest returns power fields | Battery, solar, current, and mode are visible | Passed |
+| Dashboard shows battery voltage | Power panel displays battery value | Passed |
+| Dashboard shows solar voltage | Power panel displays solar value | Passed |
+| Dashboard shows solar current | Power panel displays current value | Passed |
+| Dashboard handles missing power fields | Missing values show as `--` | Passed |
+| Old telemetry format still works | Backend does not crash | Passed |

@@ -81,6 +81,7 @@ function App() {
   const fanState = latestData?.fan_state ?? latestData?.fanState ?? "OFF";
   const batteryVoltage = latestData?.battery_voltage ?? latestData?.batteryVoltage ?? "--";
   const solarVoltage = latestData?.solar_voltage ?? latestData?.solarVoltage ?? "--";
+  const solarCurrent = latestData?.solar_current ?? latestData?.solarCurrent ?? "--";
   const powerMode = latestData?.power_mode ?? latestData?.powerMode ?? "Unknown";
   const lastUpdate = latestData?.timestamp ?? latestData?.receivedAt ?? "No data yet";
 
@@ -230,15 +231,28 @@ function App() {
           <h2 className="panel-title">🔋 Power</h2>
           <div className="status-list">
             <div className="status-item">
-              <span className="status-label">Battery</span>
-              <strong className="status-value">{batteryVoltage} V</strong>
+              <span className="status-label">Battery Voltage</span>
+              <strong className="status-value">
+                {batteryVoltage !== "--" ? `${batteryVoltage} V` : "--"}
+              </strong>
             </div>
+
             <div className="status-item">
-              <span className="status-label">Solar</span>
-              <strong className="status-value">{solarVoltage} V</strong>
+              <span className="status-label">Solar Voltage</span>
+              <strong className="status-value">
+                {solarVoltage !== "--" ? `${solarVoltage} V` : "--"}
+              </strong>
             </div>
+
             <div className="status-item">
-              <span className="status-label">Mode</span>
+              <span className="status-label">Solar Current</span>
+              <strong className="status-value">
+                {solarCurrent !== "--" ? `${solarCurrent} A` : "--"}
+              </strong>
+            </div>
+
+            <div className="status-item">
+              <span className="status-label">Power Mode</span>
               <strong className="status-value">{powerMode}</strong>
             </div>
           </div>

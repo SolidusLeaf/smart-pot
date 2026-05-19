@@ -56,3 +56,14 @@ Test message:
 ```bash
 {"deviceId":"plant1","soilMoisture":55,"temperature":24.5,"humidity":60}
 ```
+
+## Day 5 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| MQTT publisher connects | Backend logs publisher connection | Passed |
+| POST /api/command accepts WATER | Command is published to MQTT | Passed |
+| POST /api/command rejects invalid command | API returns 400 error | Passed |
+| Dashboard Water button works | WATER command appears in MQTT subscriber | Passed |
+| Dashboard Fan On button works | FAN_ON command appears in MQTT subscriber | Passed |
+| Dashboard Fan Off button works | FAN_OFF command appears in MQTT subscriber | Passed |

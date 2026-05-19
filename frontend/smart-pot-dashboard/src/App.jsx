@@ -25,6 +25,31 @@ function App() {
     }
   }
 
+  async function sendCommand(command, durationMs = null) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/command`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          command,
+          durationMs
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Command failed");
+      }
+
+      alert(`${command} command sent successfully`);
+    } catch (err) {
+      alert(`Command error: ${err.message}`);
+    }
+  }
+
   useEffect(() => {
     fetchLatestData();
 
@@ -153,12 +178,29 @@ function App() {
         <div className="panel">
           <h2 className="panel-title">🎛️ Controls</h2>
           <div className="button-grid">
-            <button className="btn btn-primary">Water Plant</button>
-            <button className="btn btn-secondary">Fan On</button>
-            <button className="btn btn-secondary">Fan Off</button>
+            <button
+              className="btn btn-primary"
+              onClick={() => sendCommand("WATER", 3000)}
+            >
+              Water Plant
+            </button>
+
+            <button
+              className="btn btn-secondary"
+              onClick={() => sendCommand("FAN_ON")}
+            >
+              Fan On
+            </button>
+
+            <button
+              className="btn btn-secondary"
+              onClick={() => sendCommand("FAN_OFF")}
+            >
+              Fan Off
+            </button>
           </div>
           <p className="panel-note">
-            Buttons are static for now. Command connection will be added later.
+            Buttons send MQTT commands through the backend.
           </p>
         </div>
 

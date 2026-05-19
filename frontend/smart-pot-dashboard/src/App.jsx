@@ -7,6 +7,7 @@ function App() {
   const [latestData, setLatestData] = useState(null);
   const [backendStatus, setBackendStatus] = useState("checking");
   const [error, setError] = useState("");
+  const [history, setHistory] = useState([]);
 
   async function fetchLatestData() {
     try {
@@ -22,6 +23,19 @@ function App() {
     } catch (err) {
       setBackendStatus("disconnected");
       setError("Backend connection failed");
+    }
+  }
+
+  async function fetchHistory() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/history?limit=10`);
+      const result = await response.json();
+
+      if (result.success) {
+        setHistory(result.records);
+      }
+    } catch (err) {
+      console.error("History fetch failed:", err.message);
     }
   }
 
@@ -52,6 +66,7 @@ function App() {
 
   useEffect(() => {
     fetchLatestData();
+    fetchHistory();
 
     const intervalId = setInterval(fetchLatestData, 3000);
 
@@ -228,6 +243,41 @@ function App() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="history-panel">
+        <h2 className="panel-title">📊 Recent Readings</h2>
+
+        {history.length === 0 ? (
+          <p className="panel-note">No history data yet.</p>
+        ) : (
+          <div className="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Soil</th>
+                  <th>Temp</th>
+                  <th>Humidity</th>
+                  <th>Water</th>
+                  <th>Power</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((row) => (
+                  <tr key={row.id}>
+                    <td>{row.timestamp}</td>
+                    <td>{row.soil_humidity ?? "--"}%</td>
+                    <td>{row.temperature ?? "--"}°C</td>
+                    <td>{row.air_humidity ?? "--"}%</td>
+                    <td>{row.water_level ?? "--"}</td>
+                    <td>{row.power_mode ?? "--"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
     </div>
   );

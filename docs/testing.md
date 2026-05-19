@@ -87,3 +87,12 @@ Test message:
 ## Day 7 Notes
 
 Week 1 backend, MQTT, database, alerts, API, and dashboard integration test completed successfully.
+
+## Day 8 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Dashboard fetches `/api/latest` | Sensor cards update with latest reading | Passed |
+| Dashboard fetches `/api/history` | Recent readings table is shown | Passed |
+| Data refresh works | Dashboard updates every 3 seconds | Passed |
+| Multiple MQTT messages appear | Recent readings list updates correctly | Passed |

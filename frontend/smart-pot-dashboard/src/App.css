@@ -415,3 +415,43 @@ button,
   border-color: rgba(202, 138, 4, 0.25);
   box-shadow: 0 4px 16px rgba(202, 138, 4, 0.15);
 }
+
+.history-panel {
+  margin-top: 32px;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fce7 100%);
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.08);
+  border: 2px solid rgba(34, 197, 94, 0.12);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(34, 197, 94, 0.12);
+  white-space: nowrap;
+}
+
+th {
+  color: #15803d;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+td {
+  color: #1f2933;
+  font-size: 0.95rem;
+}

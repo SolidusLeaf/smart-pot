@@ -67,3 +67,23 @@ Test message:
 | Dashboard Water button works | WATER command appears in MQTT subscriber | Passed |
 | Dashboard Fan On button works | FAN_ON command appears in MQTT subscriber | Passed |
 | Dashboard Fan Off button works | FAN_OFF command appears in MQTT subscriber | Passed |
+
+## Day 7 Week 1 Integration Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Backend starts | Server runs on port 3000 | Passed |
+| MQTT subscriber connects | Backend subscribes to telemetry topics | Passed |
+| MQTT publisher connects | Backend can publish command messages | Passed |
+| SQLite database works | Readings are saved into `plant_data.db` | Passed |
+| GET /api/latest works | Latest telemetry is returned | Passed |
+| GET /api/history works | Recent readings are returned | Passed |
+| GET /api/summary/today works | Daily summary is returned | Passed |
+| GET /api/alerts works | Alert records are returned | Passed |
+| Dashboard shows latest data | Cards update from backend API | Passed |
+| Dashboard command buttons work | MQTT command messages are published | Passed |
+| Dangerous telemetry creates alerts | Alert engine saves warnings/critical alerts | Passed |
+
+## Day 7 Notes
+
+Week 1 backend, MQTT, database, alerts, API, and dashboard integration test completed successfully.

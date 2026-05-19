@@ -2,6 +2,7 @@ const { initDatabase } = require("./database/db");
 const summaryRoute = require("./api/summary");
 const express = require("express");
 const cors = require("cors");
+const { startMqttPublisher } = require("./mqtt/publisher");
 require("dotenv").config();
 
 const latestRoute = require("./api/latest");
@@ -38,6 +39,7 @@ app.get("/api/health", (req, res) => {
 
 initDatabase();
 startMqttSubscriber();
+startMqttPublisher();
 
 app.listen(PORT, () => {
   console.log(`Smart Pot server running on port ${PORT}`);

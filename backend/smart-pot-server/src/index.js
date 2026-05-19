@@ -10,6 +10,8 @@ const historyRoute = require("./api/history");
 const commandsRoute = require("./api/commands");
 const { startMqttSubscriber, getMqttStatus } = require("./mqtt/subscriber");
 
+const alertsRoute = require("./api/alerts");
+
 const app = express();
 
 app.use(cors());
@@ -19,6 +21,7 @@ app.use("/api", latestRoute);
 app.use("/api", historyRoute);
 app.use("/api", commandsRoute);
 app.use("/api", summaryRoute);
+app.use("/api", alertsRoute);
 
 const PORT = process.env.PORT || 3000;
 

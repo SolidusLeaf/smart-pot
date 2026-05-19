@@ -3,6 +3,7 @@ const {
   insertReading,
   upsertDailySummary
 } = require("../database/readingRepository");
+const { checkTelemetryAlerts } = require("../alerts/alertEngine");
 
 const MQTT_URL = process.env.MQTT_URL || "mqtt://localhost:1883";
 
@@ -51,6 +52,7 @@ function startMqttSubscriber() {
         }
 
         console.log("Saved reading:", savedReading);
+        checkTelemetryAlerts(savedReading);
 
         const today = new Date().toISOString().split("T")[0];
 

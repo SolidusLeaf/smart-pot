@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from "recharts";
 
 const API_BASE_URL = "http://localhost:3000";
 
@@ -9,6 +18,7 @@ function App() {
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
   const [alerts, setAlerts] = useState([]);
+  const [todaySummary, setTodaySummary] = useState(null);
 
   async function fetchLatestData() {
     try {
@@ -53,6 +63,19 @@ function App() {
     }
   }
 
+  async function fetchTodaySummary() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/summary/today`);
+      const result = await response.json();
+
+      if (result.success && result.hasData) {
+        setTodaySummary(result.data);
+      }
+    } catch (err) {
+      console.error("Today summary fetch failed:", err.message);
+    }
+  }
+
   async function sendCommand(command, durationMs = null) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/command`, {
@@ -82,11 +105,13 @@ function App() {
     fetchLatestData();
     fetchHistory();
     fetchAlerts();
+    fetchTodaySummary();
 
     const intervalId = setInterval(() => {
       fetchLatestData();
       fetchHistory();
       fetchAlerts();
+      fetchTodaySummary();
     }, 3000);
 
     return () => clearInterval(intervalId);
@@ -103,6 +128,35 @@ function App() {
   const solarCurrent = latestData?.solar_current ?? latestData?.solarCurrent ?? "--";
   const powerMode = latestData?.power_mode ?? latestData?.powerMode ?? "Unknown";
   const lastUpdate = latestData?.timestamp ?? latestData?.receivedAt ?? "No data yet";
+
+  const healthScore = todaySummary?.health_score ?? "--";
+  const healthNotes = todaySummary?.notes ?? "No recommendation yet.";
+
+  const chartData = history
+    .slice()
+    .reverse()
+    .map((row) => ({
+      time: row.timestamp
+        ? new Date(row.timestamp).toLocaleTimeString()
+        : "",
+      soil: row.soil_humidity ?? null,
+      temperature: row.temperature ?? null,
+      humidity: row.air_humidity ?? null,
+      battery: row.battery_voltage ?? null,
+      solar: row.solar_voltage ?? null
+    }));
+
+  let healthStatus = "Unknown";
+
+  if (healthScore !== "--") {
+    if (healthScore >= 70) {
+      healthStatus = "Healthy";
+    } else if (healthScore >= 50) {
+      healthStatus = "Needs Attention";
+    } else {
+      healthStatus = "Critical";
+    }
+  }
 
   return (
     <div className="app">
@@ -294,6 +348,28 @@ function App() {
             </div>
           </div>
         </div>
+
+        <div className="panel">
+          <h2 className="panel-title">🌿 Plant Health</h2>
+
+          <div className="health-score">
+            <div className="health-number">
+              {healthScore !== "--" ? `${healthScore}/100` : "--"}
+            </div>
+            <div className="health-label">{healthStatus}</div>
+          </div>
+
+          <div className="card-bar">
+            <div
+              className="card-bar-fill"
+              style={{
+                width: healthScore !== "--" ? `${healthScore}%` : "0%"
+              }}
+            ></div>
+          </div>
+
+          <p className="panel-note">{healthNotes}</p>
+        </div>
       </section>
 
       <section className="history-panel">
@@ -327,6 +403,69 @@ function App() {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+      </section>
+
+      <section className="charts-panel">
+        <h2 className="panel-title">📈 History Charts</h2>
+
+        {chartData.length === 0 ? (
+          <p className="panel-note">No chart data yet.</p>
+        ) : (
+          <div className="charts-grid">
+            <div className="chart-card">
+              <h3>Soil Moisture</h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="time" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="soil" strokeWidth={3} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="chart-card">
+              <h3>Temperature</h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="time" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="temperature" strokeWidth={3} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="chart-card">
+              <h3>Humidity</h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="time" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="humidity" strokeWidth={3} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="chart-card">
+              <h3>Power</h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="time" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="battery" strokeWidth={3} dot={false} />
+                  <Line type="monotone" dataKey="solar" strokeWidth={3} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         )}
       </section>

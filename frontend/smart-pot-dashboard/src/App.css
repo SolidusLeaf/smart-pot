@@ -495,3 +495,58 @@ td {
   background: #fef3c7;
   border-color: rgba(245, 158, 11, 0.35);
 }
+
+.health-score {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.health-number {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #15803d;
+}
+
+.health-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #4b7c59;
+}
+
+.charts-panel {
+  margin-top: 32px;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fce7 100%);
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.08);
+  border: 2px solid rgba(34, 197, 94, 0.12);
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.chart-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 22px;
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.06);
+}
+
+.chart-card h3 {
+  margin: 0 0 16px 0;
+  color: #15803d;
+  font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}

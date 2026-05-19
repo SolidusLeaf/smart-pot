@@ -118,3 +118,25 @@ Week 1 backend, MQTT, database, alerts, API, and dashboard integration test comp
 | Dashboard fetches alerts | Alerts panel shows backend alerts | Passed |
 | Critical alert styling works | Critical alerts appear clearly | Passed |
 | Warning alert styling works | Warning alerts appear clearly | Passed |
+
+## Day 11 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| GET /api/summary/today returns health score | `health_score` is included | Passed |
+| Health notes are generated | `notes` field is included | Passed |
+| Dashboard fetches today summary | Plant Health panel updates | Passed |
+| Dashboard shows score | Health score appears as `/100` | Passed |
+| Dashboard shows recommendation | Notes are visible in health panel | Passed |
+
+## Day 12 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Recharts installed | Dashboard builds without import errors | Passed |
+| History data is converted to chart data | Chart data appears from `/api/history` | Passed |
+| Soil chart works | Soil moisture trend is visible | Passed |
+| Temperature chart works | Temperature trend is visible | Passed |
+| Humidity chart works | Humidity trend is visible | Passed |
+| Power chart works | Battery and solar values are visible | Passed |
+| Dashboard remains responsive | Layout works on normal screen size | Passed |

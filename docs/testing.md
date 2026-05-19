@@ -108,3 +108,13 @@ Week 1 backend, MQTT, database, alerts, API, and dashboard integration test comp
 | Dashboard shows solar current | Power panel displays current value | Passed |
 | Dashboard handles missing power fields | Missing values show as `--` | Passed |
 | Old telemetry format still works | Backend does not crash | Passed |
+
+## Day 10 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Alert cooldown works | Duplicate alerts are skipped within cooldown window | Passed |
+| GET /api/alerts works | Recent alerts are returned | Passed |
+| Dashboard fetches alerts | Alerts panel shows backend alerts | Passed |
+| Critical alert styling works | Critical alerts appear clearly | Passed |
+| Warning alert styling works | Warning alerts appear clearly | Passed |

@@ -1,4 +1,4 @@
-const { insertAlert } = require("../database/alertRepository");
+const { insertAlertIfNotRecent } = require("../database/alertRepository");
 
 function checkTelemetryAlerts(reading) {
   const alerts = [];
@@ -63,11 +63,14 @@ function checkTelemetryAlerts(reading) {
   }
 
   alerts.forEach((alert) => {
-    insertAlert(alert, (error) => {
+    insertAlertIfNotRecent(alert, 30, (error, savedAlert) => {
       if (error) {
         console.error("Alert insert error:", error.message);
-      } else {
-        console.log("Alert created:", alert);
+        return;
+      }
+
+      if (savedAlert) {
+        console.log("Alert created:", savedAlert);
       }
     });
   });

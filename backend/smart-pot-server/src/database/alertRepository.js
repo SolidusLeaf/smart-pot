@@ -43,7 +43,47 @@ function getRecentAlerts(limit = 50, callback) {
   );
 }
 
+function getRecentAlertByType(deviceId, type, minutes, callback) {
+  db.get(
+    `
+    SELECT *
+    FROM alerts
+    WHERE device_id = ?
+      AND type = ?
+      AND created_at >= datetime('now', ?)
+    ORDER BY created_at DESC
+    LIMIT 1
+    `,
+    [deviceId, type, `-${minutes} minutes`],
+    callback
+  );
+}
+
+function insertAlertIfNotRecent(alert, cooldownMinutes = 30, callback) {
+  getRecentAlertByType(
+    alert.device_id,
+    alert.type,
+    cooldownMinutes,
+    (error, existingAlert) => {
+      if (error) {
+        if (callback) callback(error);
+        return;
+      }
+
+      if (existingAlert) {
+        console.log(`Skipped duplicate alert: ${alert.type}`);
+        if (callback) callback(null, null);
+        return;
+      }
+
+      insertAlert(alert, callback);
+    }
+  );
+}
+
 module.exports = {
   insertAlert,
-  getRecentAlerts
+  getRecentAlerts,
+  getRecentAlertByType,
+  insertAlertIfNotRecent
 };

@@ -8,6 +8,7 @@ function App() {
   const [backendStatus, setBackendStatus] = useState("checking");
   const [error, setError] = useState("");
   const [history, setHistory] = useState([]);
+  const [alerts, setAlerts] = useState([]);
 
   async function fetchLatestData() {
     try {
@@ -39,6 +40,19 @@ function App() {
     }
   }
 
+  async function fetchAlerts() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/alerts?limit=5`);
+      const result = await response.json();
+
+      if (result.success) {
+        setAlerts(result.records);
+      }
+    } catch (err) {
+      console.error("Alerts fetch failed:", err.message);
+    }
+  }
+
   async function sendCommand(command, durationMs = null) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/command`, {
@@ -67,8 +81,13 @@ function App() {
   useEffect(() => {
     fetchLatestData();
     fetchHistory();
+    fetchAlerts();
 
-    const intervalId = setInterval(fetchLatestData, 3000);
+    const intervalId = setInterval(() => {
+      fetchLatestData();
+      fetchHistory();
+      fetchAlerts();
+    }, 3000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -222,9 +241,27 @@ function App() {
 
         <div className="panel">
           <h2 className="panel-title">🚨 Alerts</h2>
-          <div className="empty-state">
-            <p>✓ No alerts. System is healthy!</p>
-          </div>
+
+          {alerts.length === 0 ? (
+            <div className="empty-state">
+              <p>✓ No alerts. System is healthy!</p>
+            </div>
+          ) : (
+            <div className="alerts-list">
+              {alerts.map((alert) => (
+                <div
+                  key={alert.id}
+                  className={`alert-item ${alert.severity?.toLowerCase()}`}
+                >
+                  <div>
+                    <strong>{alert.type}</strong>
+                    <p>{alert.message}</p>
+                  </div>
+                  <span>{alert.severity}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="panel">

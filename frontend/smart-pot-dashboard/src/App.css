@@ -455,3 +455,43 @@ td {
   color: #1f2933;
   font-size: 0.95rem;
 }
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert-item {
+  padding: 14px;
+  border-radius: 12px;
+  background: #fef3c7;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.alert-item p {
+  margin: 6px 0 0 0;
+  font-size: 0.85rem;
+}
+
+.alert-item span {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: white;
+}
+
+.alert-item.critical {
+  background: #fee2e2;
+  border-color: rgba(220, 38, 38, 0.35);
+}
+
+.alert-item.warning {
+  background: #fef3c7;
+  border-color: rgba(245, 158, 11, 0.35);
+}

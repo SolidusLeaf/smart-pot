@@ -1,26 +1,36 @@
 const mqtt = require("mqtt");
-const { saveTelemetry } = require("../store/telemetryStore");
+const {
+  insertReading,
+  upsertDailySummary
+} = require("../database/readingRepository");
 
 const MQTT_URL = process.env.MQTT_URL || "mqtt://localhost:1883";
-const TELEMETRY_TOPIC =
-  process.env.MQTT_TELEMETRY_TOPIC || "smartpot/plant1/telemetry";
+
+const TELEMETRY_TOPICS = [
+  process.env.MQTT_TELEMETRY_TOPIC || "smartpot/plant1/telemetry",
+  "smartpot/data"
+];
 
 let mqttStatus = "disconnected";
 
 function startMqttSubscriber() {
-  const client = mqtt.connect(MQTT_URL);
+  const client = mqtt.connect(MQTT_URL, {
+    clientId: `smartpot-backend-${Date.now()}`,
+    clean: true,
+    reconnectPeriod: 1000
+  });
 
   client.on("connect", () => {
     mqttStatus = "connected";
     console.log(`MQTT connected to ${MQTT_URL}`);
 
-    client.subscribe(TELEMETRY_TOPIC, (error) => {
+    client.subscribe(TELEMETRY_TOPICS, (error) => {
       if (error) {
         console.error("MQTT subscribe error:", error.message);
         return;
       }
 
-      console.log(`Subscribed to topic: ${TELEMETRY_TOPIC}`);
+      console.log(`Subscribed to topics: ${TELEMETRY_TOPICS.join(", ")}`);
     });
   });
 
@@ -33,10 +43,25 @@ function startMqttSubscriber() {
 
     try {
       const telemetry = JSON.parse(rawMessage);
-      const savedTelemetry = saveTelemetry(telemetry);
 
-      console.log("Parsed telemetry:", telemetry);
-      console.log("Saved latest telemetry:", savedTelemetry);
+      insertReading(telemetry, (error, savedReading) => {
+        if (error) {
+          console.error("Database insert error:", error.message);
+          return;
+        }
+
+        console.log("Saved reading:", savedReading);
+
+        const today = new Date().toISOString().split("T")[0];
+
+        upsertDailySummary(savedReading.device_id, today, (summaryError) => {
+          if (summaryError) {
+            console.error("Summary update error:", summaryError.message);
+          } else {
+            console.log("Daily summary updated");
+          }
+        });
+      });
     } catch (error) {
       console.error("Invalid JSON received:", error.message);
     }

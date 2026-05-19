@@ -1,24 +1,31 @@
 const express = require("express");
-const { getLatestTelemetry } = require("../store/telemetryStore");
+const { getLatestReading } = require("../database/readingRepository");
 
 const router = express.Router();
 
 router.get("/latest", (req, res) => {
-  const latestTelemetry = getLatestTelemetry();
+  getLatestReading((error, row) => {
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
 
-  if (!latestTelemetry) {
-    return res.json({
+    if (!row) {
+      return res.json({
+        success: true,
+        hasData: false,
+        message: "No telemetry received yet",
+        data: null
+      });
+    }
+
+    res.json({
       success: true,
-      hasData: false,
-      message: "No telemetry received yet",
-      data: null
+      hasData: true,
+      data: row
     });
-  }
-
-  res.json({
-    success: true,
-    hasData: true,
-    data: latestTelemetry
   });
 });
 

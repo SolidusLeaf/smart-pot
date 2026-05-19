@@ -33,16 +33,16 @@ function App() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const soilMoisture = latestData?.soilMoisture ?? "--";
+  const soilMoisture = latestData?.soil_humidity ?? latestData?.soilMoisture ?? "--";
   const temperature = latestData?.temperature ?? "--";
-  const humidity = latestData?.humidity ?? "--";
-  const waterLevel = latestData?.waterLevel ?? "--";
-  const pumpState = latestData?.pumpState ?? "OFF";
-  const fanState = latestData?.fanState ?? "OFF";
-  const batteryVoltage = latestData?.batteryVoltage ?? "--";
-  const solarVoltage = latestData?.solarVoltage ?? "--";
-  const powerMode = latestData?.powerMode ?? "Unknown";
-  const lastUpdate = latestData?.receivedAt ?? "No data yet";
+  const humidity = latestData?.air_humidity ?? latestData?.humidity ?? "--";
+  const waterLevel = latestData?.water_level ?? latestData?.waterLevel ?? "--";
+  const pumpState = latestData?.pump_state ?? latestData?.pumpState ?? "OFF";
+  const fanState = latestData?.fan_state ?? latestData?.fanState ?? "OFF";
+  const batteryVoltage = latestData?.battery_voltage ?? latestData?.batteryVoltage ?? "--";
+  const solarVoltage = latestData?.solar_voltage ?? latestData?.solarVoltage ?? "--";
+  const powerMode = latestData?.power_mode ?? latestData?.powerMode ?? "Unknown";
+  const lastUpdate = latestData?.timestamp ?? latestData?.receivedAt ?? "No data yet";
 
   return (
     <div className="app">
@@ -132,7 +132,7 @@ function App() {
             <div className="status-item">
               <span className="status-label">Device ID</span>
               <strong className="status-value">
-                {latestData?.deviceId ?? "plant1"}
+                {latestData?.device_id ?? "plant1"}
               </strong>
             </div>
             <div className="status-item">

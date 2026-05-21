@@ -20,6 +20,10 @@ function App() {
   const [alerts, setAlerts] = useState([]);
   const [todaySummary, setTodaySummary] = useState(null);
   const [deviceStatus, setDeviceStatus] = useState(null);
+  const [settings, setSettings] = useState({
+    autoMode: false,
+    soilThreshold: 35
+  });
 
   function exportCsv() {
     window.open(`${API_BASE_URL}/api/history/export.csv?limit=500`, "_blank");
@@ -94,6 +98,45 @@ function App() {
     }
   }
 
+  async function fetchSettings() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/settings`);
+      const result = await response.json();
+
+      if (result.success) {
+        setSettings({
+          autoMode: result.data.autoMode,
+          soilThreshold: result.data.soilThreshold
+        });
+      }
+    } catch (err) {
+      console.error("Settings fetch failed:", err.message);
+    }
+  }
+
+  async function updateSettings(newSettings) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/settings`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newSettings)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Settings update failed");
+      }
+
+      setSettings(result.data);
+      alert("Settings updated successfully");
+    } catch (err) {
+      alert(`Settings error: ${err.message}`);
+    }
+  }
+
   async function sendCommand(command, durationMs = null) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/command`, {
@@ -125,6 +168,7 @@ function App() {
     fetchAlerts();
     fetchTodaySummary();
     fetchDeviceStatus();
+    fetchSettings();
 
     const intervalId = setInterval(() => {
       fetchLatestData();
@@ -132,10 +176,11 @@ function App() {
       fetchAlerts();
       fetchTodaySummary();
       fetchDeviceStatus();
+      fetchSettings();
     }, 3000);
 
-    return () => clearInterval(intervalId);
-  }, []);
+  return () => clearInterval(intervalId);
+}, []);
 
   const soilMoisture = latestData?.soil_humidity ?? latestData?.soilMoisture ?? "--";
   const temperature = latestData?.temperature ?? "--";
@@ -322,6 +367,72 @@ function App() {
               <span className="status-label">Last Update</span>
               <strong className="status-value">{lastUpdate}</strong>
             </div>
+          </div>
+        </div>
+
+        <div className="panel">
+          <h2 className="panel-title">⚙️ Automation Settings</h2>
+
+          <div className="status-list">
+            <div className="status-item">
+              <span className="status-label">Auto Mode</span>
+              <strong className={`status-value ${settings.autoMode ? "status-on" : "status-off"}`}>
+                ● {settings.autoMode ? "ON" : "OFF"}
+              </strong>
+            </div>
+
+            <div className="status-item">
+              <span className="status-label">Soil Threshold</span>
+              <strong className="status-value">{settings.soilThreshold}%</strong>
+            </div>
+          </div>
+
+          <div className="settings-actions">
+            <button
+              className="btn btn-primary"
+              onClick={() =>
+                updateSettings({
+                  autoMode: true,
+                  soilThreshold: settings.soilThreshold
+                })
+              }
+            >
+              Auto On
+            </button>
+
+            <button
+              className="btn btn-secondary"
+              onClick={() =>
+                updateSettings({
+                  autoMode: false,
+                  soilThreshold: settings.soilThreshold
+                })
+              }
+            >
+              Auto Off
+            </button>
+          </div>
+
+          <div className="threshold-control">
+            <label>Soil threshold (%)</label>
+            <input
+              type="number"
+              min="0"
+              max="100"
+              value={settings.soilThreshold}
+              onChange={(e) =>
+                setSettings({
+                  ...settings,
+                  soilThreshold: Number(e.target.value)
+                })
+              }
+            />
+            <button
+              className="btn btn-secondary"
+              onClick={() => updateSettings(settings)}
+            >
+              Save Threshold
+            </button>
           </div>
         </div>
 

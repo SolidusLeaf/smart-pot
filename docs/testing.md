@@ -165,3 +165,16 @@ Week 1 backend, MQTT, database, alerts, API, and dashboard integration test comp
 | Device Status panel shows connection | Connection row updates correctly | Passed |
 | Device Status panel shows age | Age increases over time | Passed |
 | Timestamp parsing works | ISO timestamps calculate correct ageSeconds | Passed |
+
+## Day 16 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| GET /api/settings works | Settings JSON is returned | Passed |
+| PUT /api/settings validates threshold | Invalid values are rejected | Passed |
+| PUT /api/settings saves auto mode | Auto mode is stored in database | Passed |
+| PUT /api/settings saves soil threshold | Threshold is stored in database | Passed |
+| AUTO_ON command is published | MQTT command appears when autoMode is true | Passed |
+| AUTO_OFF command is published | MQTT command appears when autoMode is false | Passed |
+| Dashboard shows settings | Auto mode and threshold are visible | Passed |
+| Dashboard updates settings | Settings change from dashboard | Passed |

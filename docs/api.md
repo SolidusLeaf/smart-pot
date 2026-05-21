@@ -95,3 +95,18 @@ Example response:
   "lastSeen": "2026-05-21T11:05:30.000Z",
   "ageSeconds": 3
 }
+```
+
+## GET /api/settings
+
+Returns automation settings.
+
+```json
+{
+  "success": true,
+  "data": {
+    "autoMode": true,
+    "soilThreshold": 30,
+    "updatedAt": "2026-05-21 12:00:00"
+  }
+}

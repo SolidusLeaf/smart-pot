@@ -72,6 +72,24 @@ function initDatabase() {
       )
     `);
 
+    db.run(`
+      CREATE TABLE IF NOT EXISTS settings (
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        auto_mode INTEGER DEFAULT 0,
+        soil_threshold REAL DEFAULT 35,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    db.run(`
+      INSERT OR IGNORE INTO settings (
+        id,
+        auto_mode,
+        soil_threshold
+      )
+      VALUES (1, 0, 35)
+    `);
+
     console.log("Database tables ready");
   });
 }

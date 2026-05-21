@@ -76,3 +76,22 @@ soil_status,
 light_status,
 timestamp
 ```
+
+## GET /api/device/status
+
+Returns whether the device is online or offline based on the latest telemetry timestamp.
+
+The device is considered online if the latest telemetry was received in the last 60 seconds.
+
+Example response:
+
+```json
+{
+  "success": true,
+  "deviceId": "plant1",
+  "online": true,
+  "status": "online",
+  "reason": "Recent telemetry received",
+  "lastSeen": "2026-05-21T11:05:30.000Z",
+  "ageSeconds": 3
+}

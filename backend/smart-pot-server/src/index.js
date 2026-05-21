@@ -9,6 +9,7 @@ require("dotenv").config();
 const latestRoute = require("./api/latest");
 const historyRoute = require("./api/history");
 const commandsRoute = require("./api/commands");
+const deviceStatusRoute = require("./api/deviceStatus");
 const { startMqttSubscriber, getMqttStatus } = require("./mqtt/subscriber");
 
 const alertsRoute = require("./api/alerts");
@@ -24,6 +25,7 @@ app.use("/api", commandsRoute);
 app.use("/api", summaryRoute);
 app.use("/api", alertsRoute);
 app.use("/api", exportCsvRoute);
+app.use("/api", deviceStatusRoute);
 
 const PORT = process.env.PORT || 3000;
 

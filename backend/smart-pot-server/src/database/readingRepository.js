@@ -61,9 +61,10 @@ function insertReading(rawTelemetry, callback) {
       light_intensity,
       sun_exposure_today,
       soil_status,
-      light_status
+      light_status,
+      timestamp
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
     [
       data.device_id,
@@ -80,7 +81,8 @@ function insertReading(rawTelemetry, callback) {
       data.light_intensity,
       data.sun_exposure_today,
       data.soil_status,
-      data.light_status
+      data.light_status,
+      new Date().toISOString()
     ],
     function (error) {
       if (callback) {

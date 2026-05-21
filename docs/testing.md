@@ -151,3 +151,17 @@ Week 1 backend, MQTT, database, alerts, API, and dashboard integration test comp
 | CSV includes timestamp | Each row has timestamp | Passed |
 | Dashboard export button works | CSV downloads from dashboard | Passed |
 | CSV opens in spreadsheet app | File opens in Excel or Google Sheets | Passed |
+
+## Day 15 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| GET /api/device/status works | Device status JSON is returned | Passed |
+| Fresh telemetry shows online | Device becomes online after MQTT telemetry | Passed |
+| No telemetry for 60 seconds shows offline | Device becomes offline | Passed |
+| New telemetry restores online | Device becomes online again | Passed |
+| Dashboard shows backend status | Backend badge appears in header | Passed |
+| Dashboard shows device status | Device online/offline badge appears in header | Passed |
+| Device Status panel shows connection | Connection row updates correctly | Passed |
+| Device Status panel shows age | Age increases over time | Passed |
+| Timestamp parsing works | ISO timestamps calculate correct ageSeconds | Passed |

@@ -19,6 +19,7 @@ function App() {
   const [history, setHistory] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [todaySummary, setTodaySummary] = useState(null);
+  const [deviceStatus, setDeviceStatus] = useState(null);
 
   function exportCsv() {
     window.open(`${API_BASE_URL}/api/history/export.csv?limit=500`, "_blank");
@@ -80,6 +81,19 @@ function App() {
     }
   }
 
+  async function fetchDeviceStatus() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/device/status`);
+      const result = await response.json();
+
+      if (result.success) {
+        setDeviceStatus(result);
+      }
+    } catch (err) {
+      console.error("Device status fetch failed:", err.message);
+    }
+  }
+
   async function sendCommand(command, durationMs = null) {
     try {
       const response = await fetch(`${API_BASE_URL}/api/command`, {
@@ -110,12 +124,14 @@ function App() {
     fetchHistory();
     fetchAlerts();
     fetchTodaySummary();
+    fetchDeviceStatus();
 
     const intervalId = setInterval(() => {
       fetchLatestData();
       fetchHistory();
       fetchAlerts();
       fetchTodaySummary();
+      fetchDeviceStatus();
     }, 3000);
 
     return () => clearInterval(intervalId);
@@ -172,8 +188,18 @@ function App() {
           </p>
         </div>
 
-        <div className={`status-badge ${backendStatus}`}>
-          Backend: {backendStatus}
+        <div className="header-badges">
+          <div className={`status-badge ${backendStatus}`}>
+            Backend: {backendStatus}
+          </div>
+
+          <div
+            className={`status-badge ${
+              deviceStatus?.online ? "connected" : "disconnected"
+            }`}
+          >
+            Device: {deviceStatus?.status ?? "checking"}
+          </div>
         </div>
       </header>
 
@@ -253,14 +279,45 @@ function App() {
                 {latestData?.device_id ?? "plant1"}
               </strong>
             </div>
+
+            <div className="status-item">
+              <span className="status-label">Connection</span>
+              <strong
+                className={`status-value ${
+                  deviceStatus?.online ? "status-on" : "status-off"
+                }`}
+              >
+                ● {deviceStatus?.status ?? "checking"}
+              </strong>
+            </div>
+
+            <div className="status-item">
+              <span className="status-label">Last Seen</span>
+              <strong className="status-value">
+                {deviceStatus?.lastSeen ?? "No data yet"}
+              </strong>
+            </div>
+
+            <div className="status-item">
+              <span className="status-label">Age</span>
+              <strong className="status-value">
+                {deviceStatus?.ageSeconds !== null &&
+                deviceStatus?.ageSeconds !== undefined
+                  ? `${deviceStatus.ageSeconds}s`
+                  : "--"}
+              </strong>
+            </div>
+
             <div className="status-item">
               <span className="status-label">Pump</span>
               <strong className="status-value status-off">● {pumpState}</strong>
             </div>
+
             <div className="status-item">
               <span className="status-label">Fan</span>
               <strong className="status-value status-off">● {fanState}</strong>
             </div>
+
             <div className="status-item">
               <span className="status-label">Last Update</span>
               <strong className="status-value">{lastUpdate}</strong>

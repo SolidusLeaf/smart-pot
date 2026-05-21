@@ -20,6 +20,10 @@ function App() {
   const [alerts, setAlerts] = useState([]);
   const [todaySummary, setTodaySummary] = useState(null);
 
+  function exportCsv() {
+    window.open(`${API_BASE_URL}/api/history/export.csv?limit=500`, "_blank");
+  }
+
   async function fetchLatestData() {
     try {
       const response = await fetch(`${API_BASE_URL}/api/latest`);
@@ -373,7 +377,12 @@ function App() {
       </section>
 
       <section className="history-panel">
-        <h2 className="panel-title">📊 Recent Readings</h2>
+        <div className="section-header">
+          <h2 className="panel-title">📊 Recent Readings</h2>
+          <button className="btn btn-secondary" onClick={exportCsv}>
+            Export CSV
+          </button>
+        </div>
 
         {history.length === 0 ? (
           <p className="panel-note">No history data yet.</p>

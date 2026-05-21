@@ -1,5 +1,6 @@
 const { initDatabase } = require("./database/db");
 const summaryRoute = require("./api/summary");
+const exportCsvRoute = require("./api/exportCsv");
 const express = require("express");
 const cors = require("cors");
 const { startMqttPublisher } = require("./mqtt/publisher");
@@ -22,6 +23,7 @@ app.use("/api", historyRoute);
 app.use("/api", commandsRoute);
 app.use("/api", summaryRoute);
 app.use("/api", alertsRoute);
+app.use("/api", exportCsvRoute);
 
 const PORT = process.env.PORT || 3000;
 

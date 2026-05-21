@@ -38,3 +38,41 @@ Example response:
 | `solarVoltage` / `solar_voltage`     | number | Solar panel voltage                  |
 | `solarCurrent` / `solar_current`     | number | Solar charging current               |
 | `powerMode` / `power_mode`           | string | `NORMAL`, `LOW_POWER`, or `CRITICAL` |
+
+## GET /api/history/export.csv
+
+Exports recent telemetry history as a CSV file.
+
+### Query parameters
+
+| Parameter | Description | Default |
+|---|---|---|
+| `device` | Device ID to export | `smartpot_01` |
+| `limit` | Maximum number of rows | `500` |
+
+### Example
+
+```text
+GET /api/history/export.csv?device=smartpot_01&limit=500
+```
+
+### CSV columns
+```
+id,
+device_id,
+soil_humidity,
+air_humidity,
+temperature,
+water_level,
+pump_state,
+fan_state,
+battery_voltage,
+solar_voltage,
+solar_current,
+power_mode,
+light_intensity,
+sun_exposure_today,
+soil_status,
+light_status,
+timestamp
+```

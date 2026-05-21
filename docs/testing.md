@@ -140,3 +140,14 @@ Week 1 backend, MQTT, database, alerts, API, and dashboard integration test comp
 | Humidity chart works | Humidity trend is visible | Passed |
 | Power chart works | Battery and solar values are visible | Passed |
 | Dashboard remains responsive | Layout works on normal screen size | Passed |
+
+## Day 13 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| CSV export endpoint works | `/api/history/export.csv` downloads CSV | Passed |
+| CSV includes sensor fields | Soil, humidity, temperature are included | Passed |
+| CSV includes power fields | Battery, solar voltage, solar current, power mode are included | Passed |
+| CSV includes timestamp | Each row has timestamp | Passed |
+| Dashboard export button works | CSV downloads from dashboard | Passed |
+| CSV opens in spreadsheet app | File opens in Excel or Google Sheets | Passed |

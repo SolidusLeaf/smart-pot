@@ -23,6 +23,4 @@ bool getPumpState() {
     return pumpState;
 }
 
-int getFanSpeed() {
-    return fanSpeedPercent;
-}
+

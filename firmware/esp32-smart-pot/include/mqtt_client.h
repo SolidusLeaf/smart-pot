@@ -13,7 +13,8 @@ struct AlertFlags {
 void mqttBegin();
 void mqttLoop();
 void publishTelemetry(const SensorData &data);
+void publishAlerts(const AlertFlags &alerts);
 void publishAlert(const char* alertMessage);
-void checkAlerts(const SensorData &data);
+AlertFlags checkAlerts(const SensorData &data);
 void initializeAlertFlags();
 #endif

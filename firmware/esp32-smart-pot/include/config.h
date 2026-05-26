@@ -10,7 +10,7 @@
 // WI-FI CONFIG
 // =============================
 #define WIFI_SSID "Checking"
-#define WIFI_PASSWORD "ftqz3398"
+#define WIFI_PASSWORD "mjik4591"
 
 // =============================
 // MQTT CONFIG
@@ -47,9 +47,14 @@
 #define FAN_PWM_CHANNEL 0
 #define FAN_PWM_FREQ 5000
 #define FAN_PWM_RESOLUTION 8
+
 // =============================
-// FILE PATHS
+// BATTERY CONFIG
 // =============================
-#define MANUAL_CONFIG_PATH "/data config.json"
+#define ADC_MAX 4095.0
+#define ADC_REF 3.3
+
+#define BAT_R1 100000.0
+#define BAT_R2 100000.0
 
 #endif

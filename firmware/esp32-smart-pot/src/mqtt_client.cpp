@@ -33,16 +33,9 @@ static void mqttCallback(char *topic, byte *payload, unsigned int length) {
         message += (char)payload[i];
     }
 
-    Serial.print("MQTT command received: ");
-    Serial.println(message);
-
-    if (message == "pump_on") {
-        setPump(true);
-    } else if (message == "pump_off") {
-        setPump(false);
-    }
-    if (getSensorFlag()) {
-        checkAlerts(readSensors());
+    
+    if (!strcmp(topic, MQTT_TOPIC_MANUAL)) {
+        manualHandleMessage(topic, message.c_str());
     }
 }
 
@@ -58,6 +51,7 @@ static void reconnectMQTT() {
             Serial.print("failed, rc=");
             Serial.print(mqtt.state());
             Serial.println(" retrying in 3 seconds...");
+            
             delay(3000);
         }
     }
@@ -82,29 +76,29 @@ void publishTelemetry(const SensorData &data) {
     snprintf(
         payload,
         sizeof(payload),
-        "{\"soilRaw\":%d,\"soilPercent\":%d,\"waterRaw\":%d,\"waterPercent\":%d,\"temperature\":%.2f,\"humidity\":%.2f,\"pressure\":%.2f,\"pump\":%s,\"fan\":%d}",
+        "{\"soilRaw\":%d,\"soilPercent\":%d,\"temperature\":%.2f,\"humidity\":%.2f,\"batteryVoltage\":%.2f,\"batteryPercent\":%d,\"pump\":%s}",
         data.soilRaw,
         data.soilPercent,
-        data.waterRaw,
-        data.waterPercent,
         data.temperature,
         data.humidity,
-        data.pressure,
+        data.batteryVoltage,
+        data.batteryPercent,
         getPumpState() ? "true" : "false"
     );
 
     mqtt.publish(MQTT_TOPIC_TELEMETRY, payload);
     Serial.println(payload);
 }
+
 void publishAlert(const char* alertMessage) {
     mqtt.publish(MQTT_TOPIC_STATUS, alertMessage);
     Serial.println(alertMessage);
 }
 
-void checkAlerts(const SensorData &data) {
+AlertFlags checkAlerts(const SensorData &data) {
 
     AlertFlags alert;
-    if (data.soilPercent < manualConfig.soilTarget && data.waterPercent > manualConfig.waterMin) {
+    if (data.soilPercent < manualConfig.soilTarget) {
         alert.soilAlert = true;
     }
     else {
@@ -130,8 +124,10 @@ void checkAlerts(const SensorData &data) {
     else {
         alert.tankAlert = false;
     }
-    
-    
+    return alert;
+}
+
+void publishAlerts(const AlertFlags &alert) { 
     if (alert.soilAlert) {
         publishAlert("Soil moisture is below target!");
     }else {
@@ -158,3 +154,4 @@ void checkAlerts(const SensorData &data) {
         publishAlert(status.c_str());
     }
 }
+

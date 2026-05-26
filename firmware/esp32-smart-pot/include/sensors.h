@@ -3,17 +3,19 @@
 struct SensorData {
     int soilRaw;
     int soilPercent;
-    int waterRaw;
-    int waterPercent;
     int currentTankDistanceCm;
     int tankPercent;
     float temperature;
     float humidity;
-    float pressure;
+    int batteryVoltageRaw;
+    float batteryVoltage;
+    int batteryPercent;
 };
 
 void sensorsBegin();
 SensorData readSensors();
 void sensorsFlagSetup(bool isInitialized);
 bool getSensorFlag();
+float readUltrasonicDistanceCm();
+int waterPercentFromDistance(float distanceCm);
 #endif

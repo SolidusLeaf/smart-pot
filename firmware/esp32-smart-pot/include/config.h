@@ -9,17 +9,20 @@
 // =============================
 // WI-FI CONFIG
 // =============================
-#define WIFI_SSID "Checking"
-#define WIFI_PASSWORD "mjik4591"
+#define WIFI_SSID "Checking" // Replace with your Wi-Fi SSID
+#define WIFI_PASSWORD "mjik4591" // Replace with your Wi-Fi password
 
 // =============================
 // MQTT CONFIG
 // =============================
-#define MQTT_SERVER "broker.hivemq.com"
+#define MQTT_SERVER "your-mqtt-broker-address"
 #define MQTT_PORT 1883
-#define MQTT_CLIENT_ID "smart-pot-student-1"
+#define MQTT_CLIENT_ID "smart-pot-student1"
+#define MQTT_USERNAME ""
+#define MQTT_PASSWORD ""
 
-#define MQTT_TOPIC_TELEMETRY "smartpot/student1/telemetry"
+
+#define MQTT_TOPIC_TELEMETRY "smartpot/data"
 #define MQTT_TOPIC_COMMAND   "smartpot/student1/command"
 #define MQTT_TOPIC_STATUS    "smartpot/student1/status"
 #define MQTT_TOPIC_MANUAL    "smartpot/student1/manual"
@@ -42,11 +45,7 @@
 // CONTROL SETTINGS
 // =============================
 
-#define TELEMETRY_INTERVAL_MS 5000
-
-#define FAN_PWM_CHANNEL 0
-#define FAN_PWM_FREQ 5000
-#define FAN_PWM_RESOLUTION 8
+#define TELEMETRY_INTERVAL_MS 10000
 
 // =============================
 // BATTERY CONFIG

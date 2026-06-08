@@ -15,7 +15,7 @@
 // =============================
 // MQTT CONFIG
 // =============================
-#define MQTT_SERVER "your-mqtt-broker-address"
+#define MQTT_SERVER "broker.hivemq.com"
 #define MQTT_PORT 1883
 #define MQTT_CLIENT_ID "smart-pot-student1"
 #define MQTT_USERNAME ""

@@ -40,10 +40,10 @@ router.put("/settings", async (req, res) => {
 
     const threshold = Number(soilThreshold);
 
-    if (Number.isNaN(threshold) || threshold < 0 || threshold > 100) {
+    if (Number.isNaN(threshold) || threshold < 10 || threshold > 80) {
       return res.status(400).json({
         success: false,
-        error: "soilThreshold must be a number from 0 to 100"
+        error: "soilThreshold must be a number from 10 to 80"
       });
     }
 

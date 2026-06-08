@@ -60,10 +60,6 @@ SensorData readSensors() {
     data.humidity = dht.readHumidity();
 
 
-    // Battery voltage
-    data.batteryVoltageRaw = readBatteryVoltageRaw();
-    data.batteryVoltage = readBatteryVoltage();
-    data.batteryPercent = batteryPercentFromVoltage(data.batteryVoltage);
     if (isnan(data.temperature)) data.temperature = 0;
     if (isnan(data.humidity)) data.humidity = 0;
 
@@ -104,28 +100,3 @@ int waterPercentFromDistance(float distanceCm) {
     return constrain(percent, 0, 100);
 }
 
-int readBatteryVoltageRaw() {
-    long sum  = 0;
-    unsigned long iterationTime = millis() + 10;
-    for (int i = 0; i < 10; i++) {
-        while (millis() < iterationTime) {
-            sum += analogRead(PIN_BATTERY_VOLTAGE);
-        }
-        iterationTime += 10;
-    }
-    return sum / 10;
-}
-
-float readBatteryVoltage() {
-    int raw = readBatteryVoltageRaw();
-    float addVoltage = (raw / ADC_MAX) * ADC_REF;
-    float batteryVoltage = addVoltage * ((BAT_R1 + BAT_R2) / BAT_R2);
-    return batteryVoltage;
-}
-
-int batteryPercentFromVoltage(float voltage) {
-    int millivolts = voltage * 1000;
-
-    int percent = map(millivolts, 3300, 4200, 0, 100);
-    return constrain(percent, 0, 100);
-}

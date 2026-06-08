@@ -3,8 +3,7 @@
 #include "config.h"
 
 #include <Arduino.h>
-
-static bool pumpState = false;
+ static bool pumpState = false; // Global variable to track pump state
 static int fanSpeedPercent = 0;
 
 void actuatorsBegin() {

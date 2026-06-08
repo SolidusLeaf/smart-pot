@@ -7,8 +7,8 @@
 
 
 // Analog soil moisture sensor
-// GPIO34 is input-only and good for analog reading.
-#define PIN_SOIL_MOISTURE 34
+// GPIO35 is input-only and good for analog reading.
+#define PIN_SOIL_MOISTURE 35
 #define PIN_BATTERY_VOLTAGE 33
 
 // DHT22 data pin, only used if DHT22 is selected instead of BME280.

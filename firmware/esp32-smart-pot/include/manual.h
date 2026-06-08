@@ -9,13 +9,14 @@ struct ManualConfig {
     int humidityMax;
     int waterMin;
     int tankDistancePercent;
-    bool pumpOverride;
+    bool pumpManualOverride; // true for manual override, false for automatic control
 };
 
 extern ManualConfig manualConfig;
 
 void manualInit();
 void manualHandleMessage(const char* topic, const char* payload);
-void setManualFlag(bool isInitialized);
-bool getManualFlag();
+void automaticPump(int soilPercent, int tankPercent);
+void manualPump();
+bool getPumpOverrideState();
 #endif

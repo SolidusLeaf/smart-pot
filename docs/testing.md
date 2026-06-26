@@ -24,9 +24,14 @@ Day 1 backend and dashboard skeleton tested successfully.
 |---|---|---|
 | Mosquitto installed | Mosquitto command works from install folder | Passed |
 | Mosquitto broker running | Port 1883 is LISTENING | Passed |
-| MQTT subscriber connects | Subscriber waits on smartpot/plant1/telemetry | Passed |
+| MQTT subscriber connects | Subscriber waits on `smartpot/plant1/telemetry` | Passed |
 | MQTT publisher sends message | Test JSON message is published | Passed |
 | MQTT subscriber receives message | Telemetry JSON appears in subscriber terminal | Passed |
+| Backend connects to MQTT | Backend logs MQTT connection | Passed |
+| Backend subscribes to telemetry topic | Backend logs subscribed topic | Passed |
+| Backend receives telemetry | Backend logs parsed JSON | Passed |
+| Backend handles bad JSON | Backend logs error and does not crash | Passed |
+| Dashboard static layout opens | Dashboard loads in browser | Passed |
 
 ## Day 2 Notes
 
@@ -51,3 +56,125 @@ Test message:
 ```bash
 {"deviceId":"plant1","soilMoisture":55,"temperature":24.5,"humidity":60}
 ```
+
+## Day 5 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| MQTT publisher connects | Backend logs publisher connection | Passed |
+| POST /api/command accepts WATER | Command is published to MQTT | Passed |
+| POST /api/command rejects invalid command | API returns 400 error | Passed |
+| Dashboard Water button works | WATER command appears in MQTT subscriber | Passed |
+| Dashboard Fan On button works | FAN_ON command appears in MQTT subscriber | Passed |
+| Dashboard Fan Off button works | FAN_OFF command appears in MQTT subscriber | Passed |
+
+## Day 7 Week 1 Integration Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Backend starts | Server runs on port 3000 | Passed |
+| MQTT subscriber connects | Backend subscribes to telemetry topics | Passed |
+| MQTT publisher connects | Backend can publish command messages | Passed |
+| SQLite database works | Readings are saved into `plant_data.db` | Passed |
+| GET /api/latest works | Latest telemetry is returned | Passed |
+| GET /api/history works | Recent readings are returned | Passed |
+| GET /api/summary/today works | Daily summary is returned | Passed |
+| GET /api/alerts works | Alert records are returned | Passed |
+| Dashboard shows latest data | Cards update from backend API | Passed |
+| Dashboard command buttons work | MQTT command messages are published | Passed |
+| Dangerous telemetry creates alerts | Alert engine saves warnings/critical alerts | Passed |
+
+## Day 7 Notes
+
+Week 1 backend, MQTT, database, alerts, API, and dashboard integration test completed successfully.
+
+## Day 8 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Dashboard fetches `/api/latest` | Sensor cards update with latest reading | Passed |
+| Dashboard fetches `/api/history` | Recent readings table is shown | Passed |
+| Data refresh works | Dashboard updates every 3 seconds | Passed |
+| Multiple MQTT messages appear | Recent readings list updates correctly | Passed |
+
+## Day 9 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Backend accepts power telemetry | Power fields are saved to SQLite | Passed |
+| GET /api/latest returns power fields | Battery, solar, current, and mode are visible | Passed |
+| Dashboard shows battery voltage | Power panel displays battery value | Passed |
+| Dashboard shows solar voltage | Power panel displays solar value | Passed |
+| Dashboard shows solar current | Power panel displays current value | Passed |
+| Dashboard handles missing power fields | Missing values show as `--` | Passed |
+| Old telemetry format still works | Backend does not crash | Passed |
+
+## Day 10 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Alert cooldown works | Duplicate alerts are skipped within cooldown window | Passed |
+| GET /api/alerts works | Recent alerts are returned | Passed |
+| Dashboard fetches alerts | Alerts panel shows backend alerts | Passed |
+| Critical alert styling works | Critical alerts appear clearly | Passed |
+| Warning alert styling works | Warning alerts appear clearly | Passed |
+
+## Day 11 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| GET /api/summary/today returns health score | `health_score` is included | Passed |
+| Health notes are generated | `notes` field is included | Passed |
+| Dashboard fetches today summary | Plant Health panel updates | Passed |
+| Dashboard shows score | Health score appears as `/100` | Passed |
+| Dashboard shows recommendation | Notes are visible in health panel | Passed |
+
+## Day 12 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| Recharts installed | Dashboard builds without import errors | Passed |
+| History data is converted to chart data | Chart data appears from `/api/history` | Passed |
+| Soil chart works | Soil moisture trend is visible | Passed |
+| Temperature chart works | Temperature trend is visible | Passed |
+| Humidity chart works | Humidity trend is visible | Passed |
+| Power chart works | Battery and solar values are visible | Passed |
+| Dashboard remains responsive | Layout works on normal screen size | Passed |
+
+## Day 13 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| CSV export endpoint works | `/api/history/export.csv` downloads CSV | Passed |
+| CSV includes sensor fields | Soil, humidity, temperature are included | Passed |
+| CSV includes power fields | Battery, solar voltage, solar current, power mode are included | Passed |
+| CSV includes timestamp | Each row has timestamp | Passed |
+| Dashboard export button works | CSV downloads from dashboard | Passed |
+| CSV opens in spreadsheet app | File opens in Excel or Google Sheets | Passed |
+
+## Day 15 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| GET /api/device/status works | Device status JSON is returned | Passed |
+| Fresh telemetry shows online | Device becomes online after MQTT telemetry | Passed |
+| No telemetry for 60 seconds shows offline | Device becomes offline | Passed |
+| New telemetry restores online | Device becomes online again | Passed |
+| Dashboard shows backend status | Backend badge appears in header | Passed |
+| Dashboard shows device status | Device online/offline badge appears in header | Passed |
+| Device Status panel shows connection | Connection row updates correctly | Passed |
+| Device Status panel shows age | Age increases over time | Passed |
+| Timestamp parsing works | ISO timestamps calculate correct ageSeconds | Passed |
+
+## Day 16 Tests
+
+| Test | Expected Result | Status |
+|---|---|---|
+| GET /api/settings works | Settings JSON is returned | Passed |
+| PUT /api/settings validates threshold | Invalid values are rejected | Passed |
+| PUT /api/settings saves auto mode | Auto mode is stored in database | Passed |
+| PUT /api/settings saves soil threshold | Threshold is stored in database | Passed |
+| AUTO_ON command is published | MQTT command appears when autoMode is true | Passed |
+| AUTO_OFF command is published | MQTT command appears when autoMode is false | Passed |
+| Dashboard shows settings | Auto mode and threshold are visible | Passed |
+| Dashboard updates settings | Settings change from dashboard | Passed |

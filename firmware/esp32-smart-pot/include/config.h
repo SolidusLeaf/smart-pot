@@ -10,12 +10,12 @@
 // WI-FI CONFIG
 // =============================
 #define WIFI_SSID "Checking" // Replace with your Wi-Fi SSID
-#define WIFI_PASSWORD "mjik4591" // Replace with your Wi-Fi password
+#define WIFI_PASSWORD "passwordS" // Replace with your Wi-Fi password
 
 // =============================
 // MQTT CONFIG
 // =============================
-#define MQTT_SERVER "broker.hivemq.com"
+#define MQTT_SERVER "your-mqtt-server.com" // Replace with your MQTT server address
 #define MQTT_PORT 1883
 #define MQTT_CLIENT_ID "smart-pot-student1"
 #define MQTT_USERNAME ""
@@ -32,8 +32,8 @@
 // =============================
 // Adjust these after testing your actual soil sensor.
 // Usually: wet gives lower value, dry gives higher value.
-#define TANK_EMPTY_DISTANCE_CM 20
-#define TANK_FULL_DISTANCE_CM 4
+#define TANK_EMPTY_DISTANCE_CM 12
+#define TANK_FULL_DISTANCE_CM 3
 
 #define SOIL_WET_VALUE 1200
 #define SOIL_DRY_VALUE 3200
@@ -46,6 +46,7 @@
 // =============================
 
 #define TELEMETRY_INTERVAL_MS 10000
+#define PUMP_STATUS_INTERVAL_MS 5000
 
 // =============================
 // BATTERY CONFIG

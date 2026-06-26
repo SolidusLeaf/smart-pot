@@ -125,47 +125,55 @@ void mqttLoop() {
 
 void publishTelemetry(const SensorData &data) {
     char payload[256];
+    
+    String deviceId = "smartpot-student1-" + String((uint32_t)ESP.getEfuseMac(), HEX);
 
     snprintf(
         payload,
         sizeof(payload),
-        "{\"soilRaw\":%d,\"soilPercent\":%d,\"temperature\":%.2f,\"humidity\":%.2f,\"batteryVoltage\":%.2f,\"batteryPercent\":%d,\"pump\":%s}",
+        "{\"soilRaw\":%d,\"soilPercent\":%d,\"temperature\":%.2f,\"humidity\":%.2f,\"pump\":%s,\"device_id\":\"%s\",\"tankPercent\":%d}",
         data.soilRaw,
         data.soilPercent,
         data.temperature,
         data.humidity,
-        data.batteryVoltage,
-        data.batteryPercent,
-        getPumpState() ? "true" : "false"
+        getPumpState() ? "true" : "false",
+        deviceId.c_str(),
+        data.tankPercent
     );
 
-    Serial.print("MQTT connected: ");
-    Serial.println(mqtt.connected() ? "YES" : "NO");
+    // Serial.print("MQTT connected: ");
+    // Serial.println(mqtt.connected() ? "YES" : "NO");
 
-    Serial.print("Publishing to topic: ");
-    Serial.println(MQTT_TOPIC_TELEMETRY);
+    // Serial.print("Publishing to topic: ");
+    // Serial.println(MQTT_TOPIC_TELEMETRY);
 
-    Serial.print("Payload: ");
-    Serial.println(payload);
+    // Serial.print("Payload: ");
+    // Serial.println(payload);
 
     bool ok = mqtt.publish(MQTT_TOPIC_TELEMETRY, payload);
 
-    Serial.print("Publish result: ");
-    Serial.println(ok ? "OK" : "FAILED");
+    // Serial.print("Publish result: ");
+    // Serial.println(ok ? "OK" : "FAILED");
 }
 
 void publishAlert(const char* alertMessage) {
     mqtt.publish(MQTT_TOPIC_STATUS, alertMessage);
-    Serial.println(alertMessage);
+    // Serial.println(alertMessage);
 }
 
 AlertFlags checkAlerts(const SensorData &data) {
 
     AlertFlags alert;
-    if (data.soilPercent < manualConfig.soilTarget) {
+    if (data.soilPercent < manualConfig.soilTargetMin) {
         alert.soilAlert = true;
     }
     else {
+        alert.soilAlert = false;
+    }
+    if (data.soilPercent > manualConfig.soilTargetMax) {
+        alert.soilAlert = true;
+    }
+     else {
         alert.soilAlert = false;
     }
     if(data.temperature > manualConfig.tempMax) {
@@ -240,4 +248,11 @@ void subscribeTopics() {
 void publishCheck(){
     mqtt.publish("test", "hello", true);
     mqtt.subscribe("test");
+}
+
+void checkPump(){
+    bool pumpState = getPumpState();
+    char payload[256];
+    snprintf(payload, sizeof(payload), "{\"pump\":%s}", pumpState ? "true" : "false");
+    mqtt.publish(MQTT_TOPIC_TELEMETRY, payload);
 }

@@ -2,7 +2,7 @@
 #define SENSORS_H
 struct SensorData {
     int soilRaw;
-    int soilPercent;
+    int soilPercent; 
     int currentTankDistanceCm;
     int tankPercent;
     float temperature;

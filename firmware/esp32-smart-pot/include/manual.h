@@ -3,7 +3,8 @@
 
 
 struct ManualConfig {
-    int soilTarget;
+    int soilTargetMin;
+    int soilTargetMax;
     int tempMax;
     int tempMin;
     int humidityMax;

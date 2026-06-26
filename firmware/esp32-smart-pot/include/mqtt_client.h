@@ -16,7 +16,7 @@ void publishTelemetry(const SensorData &data);
 void publishAlerts(const AlertFlags &alerts);
 void publishAlert(const char* alertMessage);
 AlertFlags checkAlerts(const SensorData &data);
-void initializeAlertFlags();
+void checkPump();
 void subscribeTopics();
 void publishCheck();
 #endif

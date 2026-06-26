@@ -5,74 +5,98 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#if USE_BME280
-#include <Adafruit_BME280.h>
-Adafruit_BME280 bme;
-#else
 #include <DHT.h>
-#define DHT_TYPE DHT22
-DHT dht(PIN_DHT22, DHT_TYPE);
-#endif
+
+static bool sensorFlag = false;
+
+DHT dht(PIN_DHT22, DHTTYPE);
 
 static int clampPercent(int value) {
     if (value < 0) return 0;
     if (value > 100) return 100;
     return value;
 }
+void sensorsFlagSetup(bool isInitialized) {
+    sensorFlag = isInitialized;
+}
 
+bool getSensorFlag() {
+    return sensorFlag;
+}
 static int mapSoilToPercent(int raw) {
     int percent = map(raw, SOIL_DRY_VALUE, SOIL_WET_VALUE, 0, 100);
     return clampPercent(percent);
 }
 
-static int mapWaterToPercent(int raw) {
-    int percent = map(raw, WATER_EMPTY_VALUE, WATER_FULL_VALUE, 0, 100);
-    return clampPercent(percent);
-}
 
 void sensorsBegin() {
+   
+    pinMode(PIN_BATTERY_VOLTAGE, INPUT);
+    analogReadResolution(12);
     pinMode(PIN_SOIL_MOISTURE, INPUT);
-    pinMode(PIN_WATER_LEVEL, INPUT);
+    pinMode(PIN_ULTRASONIC_TRIG, OUTPUT);
+    pinMode(PIN_ULTRASONIC_ECHO, INPUT);
+    digitalWrite(PIN_ULTRASONIC_TRIG, LOW);
 
-#if USE_BME280
-    Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
-    bool ok = bme.begin(0x76);
-    if (!ok) {
-        Serial.println("BME280 not found at 0x76. Trying 0x77...");
-        ok = bme.begin(0x77);
-    }
-
-    if (!ok) {
-        Serial.println("ERROR: BME280 not detected.");
-    } else {
-        Serial.println("BME280 detected.");
-    }
-#else
     dht.begin();
     Serial.println("DHT22 initialized.");
-#endif
+
 }
 
 SensorData readSensors() {
-    SensorData data{};
+    SensorData data;
 
+    // soil example
     data.soilRaw = analogRead(PIN_SOIL_MOISTURE);
-    data.soilPercent = mapSoilToPercent(data.soilRaw);
+    data.soilPercent = map(data.soilRaw, 3800, 1500, 0, 100);
+    data.soilPercent = constrain(data.soilPercent, 0, 100);
+    // ultrasonic water level
+    float distance = readUltrasonicDistanceCm();
+    data.currentTankDistanceCm = distance;  // distance in cm
+    data.tankPercent = waterPercentFromDistance(distance);
 
-    data.waterRaw = analogRead(PIN_WATER_LEVEL);
-    data.waterPercent = mapWaterToPercent(data.waterRaw);
-
-#if USE_BME280
-    data.temperature = bme.readTemperature();
-    data.humidity = bme.readHumidity();
-    data.pressure = bme.readPressure() / 100.0F;
-    data.environmentOk = !isnan(data.temperature) && !isnan(data.humidity) && !isnan(data.pressure);
-#else
+    // DHT code here
     data.temperature = dht.readTemperature();
     data.humidity = dht.readHumidity();
-    data.pressure = 0.0;
-    data.environmentOk = !isnan(data.temperature) && !isnan(data.humidity);
-#endif
+
+
+    if (isnan(data.temperature)) data.temperature = 0;
+    if (isnan(data.humidity)) data.humidity = 0;
 
     return data;
 }
+
+float readUltrasonicDistanceCm() {
+    digitalWrite(PIN_ULTRASONIC_TRIG, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(PIN_ULTRASONIC_TRIG, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(PIN_ULTRASONIC_TRIG, LOW);
+
+    unsigned long duration = pulseIn(PIN_ULTRASONIC_ECHO, HIGH, 30000);
+
+    if (duration == 0) {
+        return -1; // no echo / failed reading
+    }
+
+    float distance = duration * 0.0343 / 2.0;
+    return distance;
+}
+
+int waterPercentFromDistance(float distanceCm) {
+    if (distanceCm < 0) {
+        return 0;
+    }
+
+    int percent = map(
+        distanceCm,
+        TANK_EMPTY_DISTANCE_CM,
+        TANK_FULL_DISTANCE_CM,
+        0,
+        100
+    );
+
+    return constrain(percent, 0, 100);
+}
+

@@ -8,6 +8,7 @@
 #include "manual.h"
 
 unsigned long lastTelemetryTime = 0;
+unsigned long lastPumpStatusTime = 0;
 
 void setup() {
     delay(5000); // Allow time for serial monitor to connect
@@ -24,6 +25,7 @@ void setup() {
     actuatorsBegin();
     manualInit();
     mqttBegin();
+
     
     Serial.println("System ready.");
     sensorsFlagSetup(true);
@@ -39,20 +41,20 @@ void loop() {
 
         SensorData data = readSensors();
 
-        Serial.println(
-            "Soil: " + String(data.soilPercent) +
-            "%, Temp: " + String(data.temperature) +
-            "C, Humidity: " + String(data.humidity) +
-            "%, Tank Distance: " + String(data.currentTankDistanceCm) +
-            "cm, Tank Percent: " + String(data.tankPercent) + "%"
-        );
+        // Serial.println(
+        //     "Soil: " + String(data.soilPercent) +
+        //     "%, Temp: " + String(data.temperature) +
+        //     "C, Humidity: " + String(data.humidity) +
+        //     "%, Tank Distance: " + String(data.currentTankDistanceCm) +
+        //     "cm, Tank Percent: " + String(data.tankPercent) + "%"
+        // );
 
         Serial.println("Soil Raw: " + String(data.soilRaw));
 
-        Serial.println(
-            "Battery Voltage: " + String(data.batteryVoltage, 2) +
-            "V, Battery Percent: " + String(data.batteryPercent) + "%"
-        );
+        // Serial.println(
+        //     "Battery Voltage: " + String(data.batteryVoltage, 2) +
+        //     "V, Battery Percent: " + String(data.batteryPercent) + "%"
+        // );
 
         publishTelemetry(data);      // publish sensor data to MQTT
         if (getPumpOverrideState())
@@ -62,10 +64,14 @@ void loop() {
         }
 
         digitalWrite(PIN_STATUS_LED, !digitalRead(PIN_STATUS_LED));
-        Serial.println(getPumpOverrideState() ? "Auto pump is OFF" : "Auto pump is ON");
-        Serial.println("Tank percent: " + String(data.tankPercent) + "%");
-         Serial.println("Soil percent: " + String(data.soilPercent) + "%");
+        // Serial.println(getPumpOverrideState() ? "Auto pump is OFF" : "Auto pump is ON");
+        // Serial.println("Tank percent: " + String(data.tankPercent) + "%");
+        // Serial.println("Soil percent: " + String(data.soilPercent) + "%");
          
+    }
+    if (now - lastPumpStatusTime >= PUMP_STATUS_INTERVAL_MS) {
+        lastPumpStatusTime = now;
+        checkPump();
     }
 
     if (!getPumpOverrideState()) {

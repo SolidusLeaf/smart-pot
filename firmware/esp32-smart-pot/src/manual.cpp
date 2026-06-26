@@ -7,7 +7,8 @@ ManualConfig manualConfig;
 
 // Default configuration values
 void manualInit() {
-    manualConfig.soilTarget = 10; // Originally 40
+    manualConfig.soilTargetMin = 10; // Originally 40
+    manualConfig.soilTargetMax = 40;
     manualConfig.tempMax = 28;
     manualConfig.tempMin = 15;
     manualConfig.humidityMax = 70;
@@ -27,9 +28,10 @@ void manualHandleMessage(const char* topic, const char* payload) {
         Serial.println("JSON parse failed");
         return;
     }
-
-    if (doc.containsKey("soilTarget"))
-        manualConfig.soilTarget = doc["soilTarget"];
+    if (doc.containsKey("soilTargetMax"))
+        manualConfig.soilTargetMax = doc["soilTargetMax"];
+    if (doc.containsKey("soilTargetMin"))
+        manualConfig.soilTargetMin = doc["soilTargetMin"];
 
     if (doc.containsKey("tempMax"))
         manualConfig.tempMax = doc["tempMax"];
@@ -67,11 +69,15 @@ void manualHandleMessage(const char* topic, const char* payload) {
 void automaticPump(int soilPercent, int tankPercent) {
     // Automatic control logic based on sensor readings and thresholds
     
-     if (soilPercent < manualConfig.soilTarget && tankPercent > manualConfig.tankDistancePercent) {
+     if (soilPercent < manualConfig.soilTargetMin && tankPercent > manualConfig.tankDistancePercent) {
         setPump(true);
-    } else {
+    } else if (soilPercent > manualConfig.soilTargetMax || tankPercent < manualConfig.tankDistancePercent){
         setPump(false);
     }
+    else 
+        {
+            setPump(false);
+        }
 }
 
 void manualPump() {
